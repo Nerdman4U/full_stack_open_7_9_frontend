@@ -10,6 +10,10 @@ const noteSlice = createSlice({
     appendNote(state, action) {
       state.push(action.payload)
     },
+    removeNote(state, action) {
+      const id = action.payload
+      return state.filter(note => note.id !== id)
+    },
     toggleImportanceOf(state, action) {
       const id = action.payload
       const note = state.find(n => n.id === id)
