@@ -12,6 +12,13 @@ const Note = () => {
     <>
       <h1>{note.content}</h1>
       <div>Important: {note.important ? 'true' : 'false'}</div>
+      <div>
+        <ul>
+          {note.comments?.map(comment => (
+            <li key={comment.id}>{comment.content}</li>
+          ))}
+        </ul>
+      </div>
     </>
   )
 }
