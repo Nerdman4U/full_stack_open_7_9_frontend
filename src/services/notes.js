@@ -27,4 +27,14 @@ const update = (id, newObject) => {
   return request.then(response => response.data)
 }
 
-export default { getAll, create, update, setToken }
+const remove = id => {
+  console.log('removeNote')
+  return fetch(`${baseUrl}/${id}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: token,
+    },
+  })
+}
+
+export default { getAll, create, update, setToken, remove }

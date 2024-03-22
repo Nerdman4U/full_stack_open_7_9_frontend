@@ -13,9 +13,11 @@ import {
 const User = () => {
   const dispatch = useDispatch()
   const user = useSelector(state => state.user)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('username1')
+  const [password, setPassword] = useState('password1')
   const [loginVisible, setLoginVisible] = useState(false)
+
+  console.log('User.user', user)
 
   const handleLogin = async event => {
     event.preventDefault()
@@ -61,17 +63,19 @@ const User = () => {
     )
   }
 
+  const logout = () => {
+    window.localStorage.removeItem('loggedNoteappUser')
+    dispatch(clearUser())
+    noteService.setToken(null)
+  }
+
   return (
     <>
       {!user && loginForm()}
       {user && (
         <div>
           {user.name} logged in
-          <input
-            type='button'
-            onClick={() => dispatch(clearUser())}
-            value='logout'
-          />
+          <input type='button' onClick={() => logout()} value='logout' />
         </div>
       )}
     </>

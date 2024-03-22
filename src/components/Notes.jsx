@@ -6,7 +6,7 @@ import {
   setNotification,
   clearNotification,
 } from '../reducers/notificationReducer'
-import { setNotes, appendNote } from '../reducers/noteReducer'
+import { setNotes, appendNote, removeNote } from '../reducers/noteReducer'
 import Togglable from './Togglable'
 import NoteForm from './NoteForm'
 
