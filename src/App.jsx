@@ -7,15 +7,21 @@ import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import NoteForm from './components/NoteForm'
+import { useSelector, useDispatch } from 'react-redux'
+import {
+  clearNotification,
+  setNotification,
+} from './reducers/notificationReducer'
 
 const App = () => {
   const [notes, setNotes] = useState([])
   const [showAll, setShowAll] = useState(true)
-  const [errorMessage, setErrorMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [loginVisible, setLoginVisible] = useState(false)
+
+  const dispatch = useDispatch()
 
   const noteFormRef = useRef()
 
@@ -29,11 +35,9 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    noteService
-      .getAll()
-      .then(initialNotes => {
-        setNotes(initialNotes)
-      })
+    noteService.getAll().then(initialNotes => {
+      setNotes(initialNotes)
+    })
   }, [])
 
   const toggleImportanceOf = id => {
@@ -43,52 +47,49 @@ const App = () => {
     noteService
       .update(id, changedNote)
       .then(returnedNote => {
-        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+        setNotes(notes.map(note => (note.id !== id ? note : returnedNote)))
       })
       .catch(error => {
-        setErrorMessage(
-          `Note '${note.content}' was already removed from server`
+        dispatch(
+          setNotification(
+            `Note '${note.content}' was already removed from server`,
+          ),
         )
         setTimeout(() => {
-          setErrorMessage(null)
+          dispatch(clearNotification())
         }, 5000)
       })
   }
 
-  const handleLogin = async (event) => {
+  const handleLogin = async event => {
     event.preventDefault()
 
     try {
       const user = await loginService.login({
-        username, password,
+        username,
+        password,
       })
-      window.localStorage.setItem(
-        'loggedNoteappUser', JSON.stringify(user)
-      )
+      window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
       noteService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage('wrong credentials')
+      dispatch(setNotification('wrong credentials'))
       setTimeout(() => {
-        setErrorMessage(null)
+        dispatch(clearNotification())
       }, 5000)
     }
   }
 
-  const addNote = (noteObject) => {
+  const addNote = noteObject => {
     noteFormRef.current.toggleVisibility()
-    noteService
-      .create(noteObject)
-      .then(returnedNote => {
-        setNotes(notes.concat(returnedNote))
-      })
+    noteService.create(noteObject).then(returnedNote => {
+      setNotes(notes.concat(returnedNote))
+    })
   }
 
-  const notesToShow = showAll
-    ? notes
-    : notes.filter(note => note.important)
+  const notesToShow = showAll ? notes : notes.filter(note => note.important)
 
   const loginForm = () => {
     const hideWhenVisible = { display: loginVisible ? 'none' : '' }
@@ -116,31 +117,31 @@ const App = () => {
   return (
     <div>
       <h1>Notes</h1>
-      <Notification message={errorMessage} />
+      <Notification />
 
       {!user && loginForm()}
-      {user && <div>
-        <p>{user.name} logged in</p>
-        <Togglable buttonLabel='new note' ref={noteFormRef}>
-          <NoteForm
-            createNote={addNote}
-          />
-        </Togglable>
-      </div>}
+      {user && (
+        <div>
+          <p>{user.name} logged in</p>
+          <Togglable buttonLabel='new note' ref={noteFormRef}>
+            <NoteForm createNote={addNote} />
+          </Togglable>
+        </div>
+      )}
 
       <div>
         <button onClick={() => setShowAll(!showAll)}>
-          show {showAll ? 'important' : 'all' }
+          show {showAll ? 'important' : 'all'}
         </button>
       </div>
       <ul>
-        {notesToShow.map(note =>
+        {notesToShow.map(note => (
           <Note
             key={note.id}
             note={note}
             toggleImportance={() => toggleImportanceOf(note.id)}
           />
-        )}
+        ))}
       </ul>
       <Footer />
     </div>
