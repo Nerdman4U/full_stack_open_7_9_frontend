@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
-import Note from './components/Note'
+import Notes from './components/Notes'
+
 import Notification from './components/Notification'
 import Footer from './components/Footer'
 import noteService from './services/notes'
@@ -12,21 +13,18 @@ import {
   clearNotification,
   setNotification,
 } from './reducers/notificationReducer'
-import {
-  setNotes,
-  appendNote,
-  toggleImportanceOf,
-} from './reducers/noteReducer'
+import { setNotes, appendNote } from './reducers/noteReducer'
+import { setUser, clearUser } from './reducers/userReducer'
 
 const App = () => {
   const dispatch = useDispatch()
-  const notes = useSelector(state => state.notes)
 
-  const [showAll, setShowAll] = useState(true)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  //const [user, setUser] = useState(null)
   const [loginVisible, setLoginVisible] = useState(false)
+
+  const user = useSelector(state => state.user)
 
   const noteFormRef = useRef()
 
@@ -45,27 +43,6 @@ const App = () => {
     })
   }, [dispatch])
 
-  const toggleImportanceOf = id => {
-    const note = notes.find(n => n.id === id)
-    const changedNote = { ...note, important: !note.important }
-
-    noteService
-      .update(id, changedNote)
-      .then(returnedNote => {
-        setNotes(notes.map(note => (note.id !== id ? note : returnedNote)))
-      })
-      .catch(error => {
-        dispatch(
-          setNotification(
-            `Note '${note.content}' was already removed from server`,
-          ),
-        )
-        setTimeout(() => {
-          dispatch(clearNotification())
-        }, 5000)
-      })
-  }
-
   const handleLogin = async event => {
     event.preventDefault()
 
@@ -76,7 +53,7 @@ const App = () => {
       })
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
       noteService.setToken(user.token)
-      setUser(user)
+      dispatch(setUser(user))
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -93,8 +70,6 @@ const App = () => {
       dispatch(appendNote(returnedNote))
     })
   }
-
-  const notesToShow = showAll ? notes : notes.filter(note => note.important)
 
   const loginForm = () => {
     const hideWhenVisible = { display: loginVisible ? 'none' : '' }
@@ -133,21 +108,7 @@ const App = () => {
           </Togglable>
         </div>
       )}
-
-      <div>
-        <button onClick={() => setShowAll(!showAll)}>
-          show {showAll ? 'important' : 'all'}
-        </button>
-      </div>
-      <ul>
-        {notesToShow.map(note => (
-          <Note
-            key={note.id}
-            note={note}
-            toggleImportance={() => toggleImportanceOf(note.id)}
-          />
-        ))}
-      </ul>
+      <Notes />
       <Footer />
     </div>
   )
