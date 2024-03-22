@@ -12,16 +12,21 @@ import {
   clearNotification,
   setNotification,
 } from './reducers/notificationReducer'
+import {
+  setNotes,
+  appendNote,
+  toggleImportanceOf,
+} from './reducers/noteReducer'
 
 const App = () => {
-  const [notes, setNotes] = useState([])
+  const dispatch = useDispatch()
+  const notes = useSelector(state => state.notes)
+
   const [showAll, setShowAll] = useState(true)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [loginVisible, setLoginVisible] = useState(false)
-
-  const dispatch = useDispatch()
 
   const noteFormRef = useRef()
 
@@ -36,9 +41,9 @@ const App = () => {
 
   useEffect(() => {
     noteService.getAll().then(initialNotes => {
-      setNotes(initialNotes)
+      dispatch(setNotes(initialNotes))
     })
-  }, [])
+  }, [dispatch])
 
   const toggleImportanceOf = id => {
     const note = notes.find(n => n.id === id)
@@ -85,7 +90,7 @@ const App = () => {
   const addNote = noteObject => {
     noteFormRef.current.toggleVisibility()
     noteService.create(noteObject).then(returnedNote => {
-      setNotes(notes.concat(returnedNote))
+      dispatch(appendNote(returnedNote))
     })
   }
 
