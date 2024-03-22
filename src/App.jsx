@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import Notification from './components/Notification'
 import User from './components/User'
 import Home from './components/Home'
-import Users from './components/Users'
+import UsersContainer from './components/users/UsersContainer'
 
 import noteService from './services/notes'
 
@@ -23,7 +23,7 @@ const App = () => {
       dispatch(setUser(user))
       noteService.setToken(user.token)
     }
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     noteService.getAll().then(initialNotes => {
@@ -42,7 +42,8 @@ const App = () => {
 
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/users' element={<Users />} />
+        <Route path='/users' element={<UsersContainer />} />
+        <Route path='/users/:id' element={<UsersContainer />} />
       </Routes>
     </Router>
   )
