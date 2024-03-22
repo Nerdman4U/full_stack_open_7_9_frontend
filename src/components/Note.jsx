@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 import noteService from '../services/notes'
 import { removeNote } from '../reducers/noteReducer'
+import { Link } from 'react-router-dom'
 
 const Note = ({ note, toggleImportance }) => {
   const user = useSelector(state => state.user)
@@ -20,7 +21,9 @@ const Note = ({ note, toggleImportance }) => {
 
   return (
     <li className='note'>
-      <span>{note.content}</span>
+      <span>
+        <Link to={`/notes/${note.id}`}>{note.content}</Link>
+      </span>
       {user && (
         <>
           <button onClick={toggleImportance}>{label}</button>

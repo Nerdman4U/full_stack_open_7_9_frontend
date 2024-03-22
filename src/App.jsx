@@ -7,6 +7,7 @@ import Notification from './components/Notification'
 import User from './components/User'
 import Home from './components/Home'
 import UsersContainer from './components/users/UsersContainer'
+import Note from './components/notes/Note'
 
 import noteService from './services/notes'
 
@@ -44,6 +45,7 @@ const App = () => {
         <Route path='/' element={<Home />} />
         <Route path='/users' element={<UsersContainer />} />
         <Route path='/users/:id' element={<UsersContainer />} />
+        <Route path='/notes/:id' element={<Note />} />
       </Routes>
     </Router>
   )
