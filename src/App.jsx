@@ -34,12 +34,12 @@ const App = () => {
 
   return (
     <Router>
+      <Notification />
       <div>
         <Link to='/'>home</Link>
         <Link to='/users'>users</Link>
+        <User />
       </div>
-      <Notification />
-      <User />
 
       <Routes>
         <Route path='/' element={<Home />} />
