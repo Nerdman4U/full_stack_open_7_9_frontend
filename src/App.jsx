@@ -1,10 +1,12 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
-import Notes from './components/Notes'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+
 import Notification from './components/Notification'
-import Footer from './components/Footer'
 import User from './components/User'
+import Home from './components/Home'
+import Users from './components/Users'
 
 import noteService from './services/notes'
 
@@ -30,13 +32,19 @@ const App = () => {
   }, [dispatch])
 
   return (
-    <div>
-      <h1>Notes</h1>
+    <Router>
+      <div>
+        <Link to='/'>home</Link>
+        <Link to='/users'>users</Link>
+      </div>
       <Notification />
       <User />
-      <Notes />
-      <Footer />
-    </div>
+
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/users' element={<Users />} />
+      </Routes>
+    </Router>
   )
 }
 
