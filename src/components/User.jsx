@@ -5,10 +5,7 @@ import loginService from '../services/login'
 import noteService from '../services/notes'
 import { appendNote } from '../reducers/noteReducer'
 import { setUser, clearUser } from '../reducers/userReducer'
-import {
-  setNotification,
-  clearNotification,
-} from '../reducers/notificationReducer'
+import { setError, clearNotification } from '../reducers/notificationReducer'
 
 const User = () => {
   const dispatch = useDispatch()
@@ -33,7 +30,7 @@ const User = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      dispatch(setNotification('wrong credentials'))
+      dispatch(setError('wrong credentials'))
       setTimeout(() => {
         dispatch(clearNotification())
       }, 5000)

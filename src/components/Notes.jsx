@@ -46,6 +46,21 @@ const Notes = () => {
     })
   }
 
+  const remove = note => {
+    if (!user) {
+      console.error('No user')
+      return
+    }
+    const id = note.id
+    noteService.remove(id).then(() => {
+      dispatch(removeNote(id))
+      dispatch(setNotification(`Note '${note.content}' removed`))
+      setTimeout(() => {
+        dispatch(clearNotification())
+      }, 3000)
+    })
+  }
+
   return (
     <>
       {user && (
@@ -64,6 +79,7 @@ const Notes = () => {
             key={note.id}
             note={note}
             toggleImportance={() => toggleImportanceOf(note.id)}
+            remove={() => remove(note)}
           />
         ))}
       </ul>
