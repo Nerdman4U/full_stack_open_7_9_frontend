@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Note from './Note'
 import noteService from '../services/notes'
@@ -6,14 +6,18 @@ import {
   setNotification,
   clearNotification,
 } from '../reducers/notificationReducer'
-import { setNotes } from '../reducers/noteReducer'
+import { setNotes, appendNote } from '../reducers/noteReducer'
+import Togglable from './Togglable'
+import NoteForm from './NoteForm'
 
 const Notes = () => {
   const [showAll, setShowAll] = useState(true)
   const notes = useSelector(state => state.notes)
+  const user = useSelector(state => state.user)
   const dispatch = useDispatch()
 
   const notesToShow = showAll ? notes : notes.filter(note => note.important)
+  const noteFormRef = useRef()
 
   const toggleImportanceOf = id => {
     const note = notes.find(n => n.id === id)
@@ -35,8 +39,20 @@ const Notes = () => {
       })
   }
 
+  const addNote = noteObject => {
+    noteFormRef.current.toggleVisibility()
+    noteService.create(noteObject).then(returnedNote => {
+      dispatch(appendNote(returnedNote))
+    })
+  }
+
   return (
     <>
+      {user && (
+        <Togglable buttonLabel='new note' ref={noteFormRef}>
+          <NoteForm createNote={addNote} />
+        </Togglable>
+      )}
       <div>
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all'}
