@@ -69,7 +69,9 @@ const Notes = () => {
         </Togglable>
       )}
       <div>
-        <button onClick={() => setShowAll(!showAll)}>
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded m-2'>
           show {showAll ? 'important' : 'all'}
         </button>
       </div>

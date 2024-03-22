@@ -41,14 +41,22 @@ const Note = () => {
   }
 
   return (
-    <>
+    <div className='m-10'>
       <h1>{note.content}</h1>
       <div>Important: {note.important ? 'true' : 'false'}</div>
       <div>
         <h3>Comments</h3>
         <form onSubmit={addCommit}>
-          <input onChange={handleChangeComment} value={comment} />
-          <button type='submit'>add comment</button>
+          <input
+            onChange={handleChangeComment}
+            value={comment}
+            className='border border-gray-400 p-1 my-3'
+          />
+          <button
+            type='submit'
+            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2'>
+            add comment
+          </button>
         </form>
         <ul>
           {note.comments?.map(comment => (
@@ -56,7 +64,7 @@ const Note = () => {
           ))}
         </ul>
       </div>
-    </>
+    </div>
   )
 }
 

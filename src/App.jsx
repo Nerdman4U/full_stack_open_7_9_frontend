@@ -35,9 +35,13 @@ const App = () => {
   return (
     <Router>
       <Notification />
-      <div>
-        <Link to='/'>home</Link>
-        <Link to='/users'>users</Link>
+      <div className='p-10'>
+        <Link className='mr-4' to='/'>
+          home
+        </Link>
+        <Link className='mr-4' to='/users'>
+          users
+        </Link>
         <User />
       </div>
 

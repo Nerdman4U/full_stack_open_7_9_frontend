@@ -3,11 +3,11 @@ import { useState } from 'react'
 const NoteForm = ({ createNote }) => {
   const [newNote, setNewNote] = useState('')
 
-  const addNote = (event) => {
+  const addNote = event => {
     event.preventDefault()
     createNote({
       content: newNote,
-      important: true
+      important: true,
     })
 
     setNewNote('')
@@ -21,8 +21,13 @@ const NoteForm = ({ createNote }) => {
         <input
           value={newNote}
           onChange={event => setNewNote(event.target.value)}
+          className='border border-gray-400 p-1 m-3'
         />
-        <button type="submit">save</button>
+        <button
+          type='submit'
+          className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2'>
+          save
+        </button>
       </form>
     </div>
   )

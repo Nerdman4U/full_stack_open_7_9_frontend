@@ -19,8 +19,16 @@ const Note = ({ note, toggleImportance, remove }) => {
       </span>
       {user && (
         <>
-          <button onClick={toggleImportance}>{label}</button>
-          <button onClick={remove}>remove</button>
+          <button
+            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-2'
+            onClick={toggleImportance}>
+            {label}
+          </button>
+          <button
+            className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mx-2'
+            onClick={remove}>
+            remove
+          </button>
         </>
       )}
     </li>
